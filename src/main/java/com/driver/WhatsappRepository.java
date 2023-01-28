@@ -9,7 +9,9 @@ import java.util.*;
 public class WhatsappRepository {
 
     private int count = 0;
-    private int id = 0;
+
+    private int id = 0; // Maximum messages were present till now
+    private int currentTotalMessages = 0; // current messages
 
     Map<String, User> users = new HashMap<>(); // All users
     Map<Group, List<User>> group_users = new HashMap<>(); // Group --> Users
@@ -60,7 +62,9 @@ public class WhatsappRepository {
     public int createMessage(String content){
         // The 'i^th' created message has message id 'i'.
         // Return the message id.
-        Message message = new Message(++id, content, new Date());
+        Message message = new Message(++id, content);
+        message.setTimestamp(new Date());
+        currentTotalMessages++;
         return id;
     }
 
@@ -132,11 +136,11 @@ public class WhatsappRepository {
                     for(Message message : user_messages.get(user)){
                         group_messages.get(group).remove(message);
                     }
-                    id -= user_messages.get(user).size();
+                    currentTotalMessages -= user_messages.get(user).size();
                     users.remove(user1.getMobile()); // Remove User
                     user_messages.remove(user); // User messages removed
                     group_users.get(group).remove(user); //User removed from Group
-                    return (group_users.get(group).size() + group_messages.get(group).size() + id);
+                    return (group_users.get(group).size() + group_messages.get(group).size() + currentTotalMessages);
                 }
             }
         }
