@@ -12,7 +12,13 @@ public class WhatsappService {
     WhatsappRepository whatsappRepository = new WhatsappRepository();
 
     public String createUser(String name, String mobile) throws Exception {
-        return whatsappRepository.createUser(name, mobile);
+        try{
+            String result =  whatsappRepository.createUser(name, mobile);
+            return result;
+        }
+        catch (Exception e){
+            return e.getMessage();
+        }
     }
 
     public Group createGroup(List<User> users){
@@ -26,15 +32,33 @@ public class WhatsappService {
 
 
     public int sendMessage(Message message, User sender, Group group) throws Exception{
-        return whatsappRepository.sendMessage(message, sender, group);
+        try{
+            int result = whatsappRepository.sendMessage(message, sender, group);
+            return result;
+        }
+        catch (Exception e){
+            return -1;
+        }
     }
 
     public String changeAdmin(User approver, User user, Group group) throws Exception{
-        return whatsappRepository.changeAdmin(approver, user, group);
+        try{
+            String result =  whatsappRepository.changeAdmin(approver, user, group);
+            return result;
+        }
+        catch (Exception e){
+            return e.getMessage();
+        }
     }
 
     public int removeUser(User user) throws Exception{
-        return whatsappRepository.removeUser(user);
+        try{
+            int result =  whatsappRepository.removeUser(user);
+            return result;
+        }
+        catch (Exception e){
+            return -1;
+        }
     }
 
     public String findMessage(Date start, Date end, int K) throws Exception{
