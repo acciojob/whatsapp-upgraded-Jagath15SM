@@ -67,7 +67,7 @@ public class WhatsappController {
             return result;
         }
         catch (Exception e){
-            return whatsappService.whatsappRepository.group_messages.get(group).size();
+            throw new Exception(e.getMessage());
         }
     }
     @PutMapping("/change-admin")
@@ -99,7 +99,7 @@ public class WhatsappController {
             return result;
         }
         catch (Exception e){
-            return 1;
+            throw new Exception(e.getMessage());
         }
     }
 
