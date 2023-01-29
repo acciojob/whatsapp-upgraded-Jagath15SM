@@ -37,7 +37,7 @@ public class WhatsappService {
             return result;
         }
         catch (Exception e){
-            return -1;
+            return 1;
         }
     }
 
@@ -57,7 +57,7 @@ public class WhatsappService {
             return result;
         }
         catch (Exception e){
-            return -1;
+            return -5;
         }
     }
 
