@@ -8,10 +8,10 @@ import java.util.*;
 @Repository
 public class WhatsappRepository {
 
-    private int count = 0;
+    public int count = 0;
 
-    private int id = 0; // Maximum messages were present till now
-    private int currentTotalMessages = 0; // current messages
+    public int id = 0; // Maximum messages were present till now
+    public int currentTotalMessages = 0; // current messages
 
     Map<String, User> users = new HashMap<>(); // All users
     Map<Group, List<User>> group_users = new HashMap<>(); // Group --> Users
@@ -123,11 +123,13 @@ public class WhatsappRepository {
         //If user is not the admin, remove the user from the group, remove all its messages from all the databases, and update relevant attributes accordingly.
         //If user is removed successfully, return (the updated number of users in the group + the updated number of messages in group + the updated number of overall messages)
         boolean isUserPresent = false;
+        Group group1 = null;
         for(Group group : group_users.keySet()){
             for(User user1 : group_users.get(group)){
                 // User present in one of the group
                 if(user1 == user){
                     isUserPresent = true;
+                    group1 = group;
                     // User = Admin
                     if(group_admin.get(group) == user){
                         throw new Exception("Cannot remove admin");
@@ -147,8 +149,7 @@ public class WhatsappRepository {
         if(!isUserPresent){
             throw new Exception("User not found");
         }
-
-        return -1;
+        return (group_users.get(group1).size() + group_messages.get(group1).size() + currentTotalMessages);
     }
 
 
