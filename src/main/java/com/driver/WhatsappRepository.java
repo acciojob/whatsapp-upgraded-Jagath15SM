@@ -81,13 +81,13 @@ public class WhatsappRepository {
         }
 
         // Group --> List<Message>
-        if(group_messages.get(group).size() == 0){
+        if(!group_messages.containsKey(group)){
             group_messages.put(group, new ArrayList<>());
         }
         group_messages.get(group).add(message);
 
         // User --> Message
-        if(user_messages.get(sender).size() == 0){
+        if(!user_messages.containsKey(sender)){
             user_messages.put(sender, new ArrayList<>());
         }
         user_messages.get(sender).add(message);
@@ -123,33 +123,35 @@ public class WhatsappRepository {
         //If user is not the admin, remove the user from the group, remove all its messages from all the databases, and update relevant attributes accordingly.
         //If user is removed successfully, return (the updated number of users in the group + the updated number of messages in group + the updated number of overall messages)
         boolean isUserPresent = false;
-        Group group1 = null;
-        for(Group group : group_users.keySet()){
-            for(User user1 : group_users.get(group)){
-                // User present in one of the group
-                if(user1 == user){
-                    isUserPresent = true;
-                    group1 = group;
-                    // User = Admin
-                    if(group_admin.get(group) == user){
-                        throw new Exception("Cannot remove admin");
-                    }
-                    // User != Admin, So removing
-                    for(Message message : user_messages.get(user)){
-                        group_messages.get(group).remove(message);
-                    }
-                    currentTotalMessages -= user_messages.get(user).size();
-                    users.remove(user1.getMobile()); // Remove User
-                    user_messages.remove(user); // User messages removed
-                    group_users.get(group).remove(user); //User removed from Group
-                    return (group_users.get(group).size() + group_messages.get(group).size() + currentTotalMessages);
-                }
+        Group group = null;
+        for(Group groups : group_users.keySet()){
+            if(group_users.get(groups).contains(user)){
+                group = groups;
+                isUserPresent = true;
+                break;
             }
         }
-        if(!isUserPresent){
-            throw new Exception("User not found");
+        if(!isUserPresent) throw new Exception("User not found");
+
+        for(User admin : group_admin.values()){
+            if(admin.equals(user)) throw new Exception("Cannot remove admin");
         }
-        return (group_users.get(group1).size() + group_messages.get(group1).size() + currentTotalMessages);
+
+        for(User user1 : group_users.get(group)){
+            // User present in one of the group
+            if(user1 == user){
+                // User != Admin, So removing
+                for(Message message : user_messages.get(user)){
+                    group_messages.get(group).remove(message);
+                }
+                currentTotalMessages -= user_messages.get(user).size();
+                users.remove(user1.getMobile()); // Remove User
+                user_messages.remove(user); // User messages removed
+                group_users.get(group).remove(user); //User removed from Group
+                break;
+            }
+        }
+        return (group_users.get(group).size() + group_messages.get(group).size() + currentTotalMessages);
     }
 
 
